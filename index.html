@@ -4,12 +4,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Work in progress!!</title>
+    <title>Funny Button Page</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f9f9f9;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        .press-button {
+            font-size: 24px;
+            padding: 20px 40px;
+            background-color: #ff6600;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .press-button:hover {
+            background-color: #ff8533;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="dvd-logo"></div>
+    <div class="button-container">
+        <button class="press-button" onclick="redirectToLink()">Press Me</button>
+    </div>
+
+    <script>
+        function redirectToLink() {
+            window.location.href = "https://www.youtube.com/watch?v=KP7gHtWO7yQ"; 
+        }
+    </script>
 </body>
 
 </html>
