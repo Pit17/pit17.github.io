@@ -1,0 +1,33 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #2c3e50; 
+    font-family: 'RetroFont', sans-serif;
+}
+
+.title {
+    font-family: 'RetroFont', sans-serif;
+    color: #ecf0f1; 
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    margin-bottom: 20px;
+    font-size: 2em; 
+}
+.countdown-container {
+    text-align: center;
+}
+
+#countdown {
+    font-size: 1.5em; 
+    color: #ecf0f1; 
+    letter-spacing: 3px;
+    background-color: #34495e; 
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
