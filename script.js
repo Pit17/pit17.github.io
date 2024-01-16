@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     // (YYYY, M-1, D, H, M, S)
-    const countdownDate = new Date(2024, 5, 7, 12, 0, 0).getTime();
+    const countdownDate = new Date(2024, 5, 6, 12, 0, 0).getTime();
 
     const countdownElement = document.getElementById('countdown');
 
