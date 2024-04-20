@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        countdownElement.innerHTML = `${days-(days/7)}-Giorni ${hours}-Ore ${minutes}-Minuti ${seconds}-Secondi`;
+        countdownElement.innerHTML = `${(int)(days-(days/7))}-Giorni ${hours}-Ore ${minutes}-Minuti ${seconds}-Secondi`;
 
         
         if (distance < 0) {
