@@ -1,25 +1,24 @@
-document.addEventListener('DOMContentLoaded', function () {
-    // (YYYY, M-1, D, H, M, S)
-    const countdownDate = new Date(2024, 5, 6, 13,0,0).getTime();
+document.addEventListener('DOMContentLoaded', function() {
+    const gameLinks = document.querySelectorAll('.game-link');
 
-    const countdownElement = document.getElementById('countdown');
+    gameLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            const game = this.getAttribute('data-game');
+            loadGame(game);
+        });
+    });
 
-    
-    const countdownInterval = setInterval(function () {
-        const now = new Date().getTime();
-        const distance = countdownDate - now;
-
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        countdownElement.innerHTML = `${days}-Giorni ${hours}-Ore ${minutes}-Minuti ${seconds}-Secondi`;
-
-        
-        if (distance < 0) {
-            clearInterval(countdownInterval);
-            countdownElement.innerHTML = 'Ci vediamo a Settembre!';
+    function loadGame(game) {
+        // Qui inserisci il codice per caricare il gioco in base alla scelta
+        // Ad esempio:
+        switch (game) {
+            case 'snake':
+                window.location.href = 'snake.html'; // Esempio di reindirizzamento ad una pagina esterna con il gioco
+                break;
+            
+            default:
+                console.log('Gioco non supportato');
         }
-    }, 1000);
+    }
 });

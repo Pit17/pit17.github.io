@@ -1,17 +1,29 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scegli il tuo gioco</title>
     <link rel="stylesheet" href="styles.css">
-    <title>Countdown</title>
 </head>
 <body>
-    <h1 class="title">Alla fine della scuola mancano:</h1>
-    <div class="countdown-container">
-        <h1 id="countdown"></h1>
+    <div class="container">
+        <header>
+            <h1>Portale dei giochi</h1>
+            <p>Scegli il tuo gioco preferito</p>
+        </header>
+        <div class="game-list">
+            
+            <a href="#" data-game="snake" class="game-link">
+                <div class="game-card snake">
+                    <div class="game-overlay">
+                        <h2>Snake</h2>
+                    </div>
+                </div>
+            </a>
+            <!-- Aggiungi altri giochi con un link simile -->
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
 </html>
-
