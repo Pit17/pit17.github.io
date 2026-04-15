@@ -1,175 +1,255 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
-  <title>Pit17</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="description" content="HTML5 website template">
-  <meta name="keywords" content="Pit17, template, html, sass, jquery">
-  <link rel="stylesheet" href="assets/css/main.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Costo Ronnie Rig</title>
+    
+    <style>
+        :root { --primary: #2c3e50; --secondary: #34495e; --accent: #27ae60; --bg: #f4f7f9; --white: #ffffff; --border: #dcdfe3; --text: #333; }
+        * { box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); margin: 0; padding: 15px 15px 140px 15px; color: var(--text); }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 { text-align: center; color: var(--primary); border-bottom: 3px solid var(--accent); padding-bottom: 15px; margin-bottom: 25px; }
+        .info-box { background: #e8f4fd; color: #0c5460; padding: 15px; border-radius: 8px; margin-bottom: 25px; font-size: 0.95em; border-left: 4px solid #3498db; }
+        .section { background: var(--white); padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 25px; overflow: hidden; }
+        .section h2 { margin-top: 0; color: var(--primary); font-size: 1.4rem; margin-bottom: 20px; border-left: 4px solid var(--accent); padding-left: 10px; }
+        .add-form { display: flex; flex-wrap: wrap; gap: 12px; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; align-items: flex-end; }
+        .form-group { display: flex; flex-direction: column; flex: 1 1 180px; }
+        .form-group.small { flex: 1 1 80px; }
+        label { font-size: 0.8rem; margin-bottom: 5px; font-weight: bold; color: #64748b; }
+        input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; }
+        input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 5px rgba(39, 174, 96, 0.3); }
+        .btn-save { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; flex: 1 1 100%; transition: all 0.2s; }
+        @media (min-width: 600px) { .btn-save { flex: 0 0 auto; } }
+        .btn-save:hover { background: var(--secondary); transform: translateY(-1px); }
+        .table-wrapper { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: #f8fafc; color: #64748b; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; }
+        .costo-unitario { font-weight: bold; color: var(--accent); }
+        .btn-edit { background: transparent; color: #64748b; border: 1px solid var(--border); padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; }
+        .btn-edit:hover { background: #f1f5f9; color: var(--primary); }
+        .total-panel { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--primary); color: white; padding: 20px; text-align: center; box-shadow: 0 -4px 10px rgba(0,0,0,0.2); z-index: 1000; }
+        .total-panel span { font-size: 1.1rem; opacity: 0.9; }
+        .price { font-size: 2.2rem; display: block; color: var(--accent); font-weight: bold; margin-top: 5px; }
+        #loading { text-align: center; font-size: 1.2em; color: var(--secondary); padding: 40px; }
+    </style>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 </head>
 <body>
 
-
-<div class="device-notification">
-  <a class="device-notification--logo" href="#0">
-    <img src="assets/img/logo.jpeg" alt="Pit17" style="width: 300px; height: 200px;">
-    <p>Pit17</p>
-  </a>
-</div>
-
-<div class="perspective effect-rotate-left">
-  <div class="container"><div class="outer-nav--return"></div>
-    <div id="viewport" class="l-viewport">
-      <div class="l-wrapper">
-        <header class="header">
-          <a class="header--logo" href="#0">
-            <img src="assets/img/logo.jpeg" alt="Pit17">
-            <p>Pit17 Portfolio</p>
-          </a>
-          <button class="header--cta cta">Contacts</button>
-          <div class="header--nav-toggle">
-            <span></span>
-          </div>
-        </header>
-        <nav class="l-side-nav">
-          <ul class="side-nav">
-            <li class="is-active"><span>Home</span></li>
-            <li><span>Works</span></li>
-            <li><span>About</span></li>
-            <li><span>Contact</span></li>
-            
-          </ul>
-        </nav>
-        <ul class="l-main-content main-content">
-          <li class="l-section section section--is-active">
-            <div class="intro">
-              <div class="intro--banner">
-                <h1>Pit17<br>Portfolio<br></h1>
-                <button class="cta">Contacts
-                  <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 150 118" style="enable-background:new 0 0 150 118;" xml:space="preserve">
-                  <g transform="translate(0.000000,118.000000) scale(0.100000,-0.100000)">
-                    <path d="M870,1167c-34-17-55-57-46-90c3-15,81-100,194-211l187-185l-565-1c-431,0-571-3-590-13c-55-28-64-94-18-137c21-20,33-20,597-20h575l-192-193C800,103,794,94,849,39c20-20,39-29,61-29c28,0,63,30,298,262c147,144,272,271,279,282c30,51,23,60-219,304C947,1180,926,1196,870,1167z"/>
-                  </g>
-                  </svg>
-                  <span class="btn-background"></span>
-                </button>
-                
-              </div>
-              <div class="intro--options">
-                <a href="https://www.ispascalcomandini.it/itt-b-pascal/">
-                  <h3>School</h3>
-                  <p>I’m currently studying at ITT Blaise Pascal (FC).</p>
-                </a>
-                <a href="#0">
-                  <h3>Projects</h3>
-                  <p>I’m currently learning C#, C++ and HTML5.</p>
-                </a>
-                <a href="#0">
-                  <h3>A student from Italy</h3>
-                  <p>I like learning new things.</p>
-                </a>
-              </div>
-            </div>
-          </li>
-          <li class="l-section section">
-            <div class="work">
-              <h2>Selected work</h2>
-              <div class="work--lockup">
-                <ul class="slider">
-                  <li class="slider--item slider--item-left">
-                    <a href="#0">
-                      <div class="slider--item-image">
-                        <img src="assets/img/school_repo.jpg" alt="school_repo">
-                      </div>
-                      <p class="slider--item-title">School Projects</p>
-                      <p class="slider--item-description"><a href="https://github.com/Pit17/School_GitHub_IV" target="_blank">School Repository Here!(Click Me!)</a></p>
-                    </a>
-                  </li>
-                  <li class="slider--item slider--item-center">
-                    <a href="#0">
-                      <div class="slider--item-image">
-                        <img src="assets/img/github.png" alt="gitub_projects">
-                      </div>
-                      <p class="slider--item-title">My Projects</p>
-                      <p class="slider--item-description"><a href="https://github.com/Pit17" target="_blank">My Projects Here!(Click Me!)</a></p>
-                    </a>
-                  </li>
-                  
-                </ul>
-                <div class="slider--prev">
-                  <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                  viewBox="0 0 150 118" style="enable-background:new 0 0 150 118;" xml:space="preserve">
-                  <g transform="translate(0.000000,118.000000) scale(0.100000,-0.100000)">
-                    <path d="M561,1169C525,1155,10,640,3,612c-3-13,1-36,8-52c8-15,134-145,281-289C527,41,562,10,590,10c22,0,41,9,61,29
-                    c55,55,49,64-163,278L296,510h575c564,0,576,0,597,20c46,43,37,109-18,137c-19,10-159,13-590,13l-565,1l182,180
-                    c101,99,187,188,193,199c16,30,12,57-12,84C631,1174,595,1183,561,1169z"/>
-                  </g>
-                  </svg>
-                </div>
-                <div class="slider--next">
-                  <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 150 118" style="enable-background:new 0 0 150 118;" xml:space="preserve">
-                  <g transform="translate(0.000000,118.000000) scale(0.100000,-0.100000)">
-                    <path d="M870,1167c-34-17-55-57-46-90c3-15,81-100,194-211l187-185l-565-1c-431,0-571-3-590-13c-55-28-64-94-18-137c21-20,33-20,597-20h575l-192-193C800,103,794,94,849,39c20-20,39-29,61-29c28,0,63,30,298,262c147,144,272,271,279,282c30,51,23,60-219,304C947,1180,926,1196,870,1167z"/>
-                  </g>
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li class="l-section section">
-            <div class="about">
-              <div class="about--banner">
-                <h2>Hi, 👋 <br>I ' m Pietro Malzone<br>A student from Italy🏫</h2>
-                
-                
-              </div>
-              <div class="about--options">
-                
-                <a href="https://www.ispascalcomandini.it/itt-b-pascal/">
-                  <h3>B.Pascal student</h3>
-                </a>
-                <a href="https://github.com/Pit17">
-                  <h3>My github</h3>
-                </a>
-                <a href="https://github.com/Pit17/School_GitHub_IV">
-                  <h3>My school Repo</h3>
-                </a>
-              </div>
-            </div>
-          </li>
-          <li class="l-section section">
-            <div class="contact">
-              <div class="contact--lockup">
-                <div class="modal">
-                  <div class="modal--information">
-                    <p>Italy</p>
-                    <a href="mailto:malzonepietro3@gmail.com">email!(Click Me!)</a>
-                  </div>
-                  <ul class="modal--options">
-                    <li><a href="https://github.com/Pit17">Github</a></li>   
-                    <li><a href="mailto:malzonepietro3@gmail.com">Contact Us</a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <ul class="outer-nav">
-    <li class="is-active">Home</li>
-    <li>Works</li>
-    <li>About</li>
-    <li>Contact</li>
+<div class="container">
+    <h1>Costo Ronnie Rig</h1>
     
-  </ul>
+    <div class="info-box">
+        🎣 <strong>Database connesso.</strong>
+    </div>
+
+    <div id="loading">Connessione al server in corso...</div>
+    <div id="content" style="display:none;"></div>
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="assets/js/vendor/jquery-2.2.4.min.js"><\/script>')</script>
-<script src="assets/js/functions-min.js"></script>
+<div class="total-panel">
+    <span>Costo stimato del singolo Terminale:</span>
+    <span class="price" id="grandTotal">0.00 €</span>
+</div>
+
+<script>
+    
+   const firebaseConfig = {
+
+    apiKey: "AIzaSyAMPXiVYQEcGkaVABi2GamB9u9FaxWZSqc",
+
+    authDomain: "terminali-20d6f.firebaseapp.com",
+
+    databaseURL: "https://terminali-20d6f-default-rtdb.europe-west1.firebasedatabase.app",
+
+    projectId: "terminali-20d6f",
+
+    storageBucket: "terminali-20d6f.firebasestorage.app",
+
+    messagingSenderId: "289945470752",
+
+    appId: "1:289945470752:web:a1b82f35098d3f41a63945"
+
+  };
+
+
+
+
+    // Inizializza Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    // =========================================================
+
+    let sharedData = [];
+    let selections = {};
+
+    const categorieDef = [
+        { id: 'Filo', nome: 'Filo / Boom (30cm)', unita: 'metri' },
+        { id: 'Ami', nome: 'Ami (es. Nash Claw)', unita: 'pezzi' },
+        { id: 'Girelle', nome: 'Spinner Swivels', unita: 'pezzi' },
+        { id: 'Kicker', nome: 'Kickers / Guaina', unita: 'pezzi' },
+        { id: 'Viti', nome: 'Bait Screws / Girelline', unita: 'pezzi' },
+        { id: 'Beads', nome: 'Hook Beads / Stoppers', unita: 'pezzi' }
+    ];
+
+    // LA MAGIA DI FIREBASE: Ascolta i cambiamenti in tempo reale
+    db.collection("prodotti").onSnapshot((querySnapshot) => {
+        sharedData = [];
+        querySnapshot.forEach((doc) => {
+            sharedData.push(doc.data());
+        });
+        
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+        
+        renderApp(); // Ridisegna tutto istantaneamente quando i dati cambiano
+    });
+
+    function renderApp() {
+        const container = document.getElementById('content');
+        container.innerHTML = '';
+
+        categorieDef.forEach(catDef => {
+            const section = document.createElement('div');
+            section.className = 'section';
+            
+            let html = `<h2>${catDef.nome}</h2>
+                <div class="add-form">
+                    <div class="form-group">
+                        <label>Marca/Modello</label>
+                        <input type="text" id="new-marca-${catDef.id}" placeholder="Es. Nash, Korda...">
+                    </div>
+                    <div class="form-group small">
+                        <label>Prezzo €</label>
+                        <input type="number" id="new-prezzo-${catDef.id}" step="0.01">
+                    </div>
+                    <div class="form-group small">
+                        <label>Q.tà (${catDef.unita})</label>
+                        <input type="number" id="new-qta-${catDef.id}">
+                    </div>
+                    <div class="form-group">
+                        <label>Negozio/Link</label>
+                        <input type="text" id="new-shop-${catDef.id}" placeholder="Dove comprare?">
+                    </div>
+                    <button id="btn-add-${catDef.id}" class="btn-save" onclick="inviaDati('${catDef.id}', '${catDef.unita}')">Salva</button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Usa</th>
+                                <th>Marca</th>
+                                <th>Prezzo Conf.</th>
+                                <th>Q.tà</th>
+                                <th>Shop</th>
+                                <th>Costo Rig</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+
+            const items = sharedData.filter(i => i.categoria === catDef.id);
+            
+            if(items.length === 0) {
+                html += `<tr><td colspan="7" style="text-align: center; padding: 20px; color: #95a5a6;">Nessun prodotto inserito.</td></tr>`;
+            } else {
+                items.forEach((item, idx) => {
+                    const isFilo = catDef.id.toLowerCase() === 'filo';
+                    const unitCost = isFilo ? (item.prezzo / item.qta) * 0.3 : (item.prezzo / item.qta);
+                    const rowId = `row-${catDef.id}-${idx}`;
+                    
+                    const safeMarca = item.marca.replace(/'/g, "\\'");
+                    const safeShop = item.shop.replace(/'/g, "\\'");
+                    const isChecked = selections[catDef.id] === unitCost ? 'checked' : '';
+                    const bgStyle = isChecked ? 'background-color: #f0fdf4;' : '';
+
+                    html += `
+                        <tr id="${rowId}" style="${bgStyle}">
+                            <td><input type="radio" name="radio-${catDef.id}" ${isChecked} style="transform: scale(1.3);" onclick="selectItem('${catDef.id}', ${unitCost}, '${rowId}')"></td>
+                            <td><strong>${item.marca}</strong></td>
+                            <td>${item.prezzo.toFixed(2)}€</td>
+                            <td>${item.qta} ${catDef.unita}</td>
+                            <td><small>${item.shop}</small></td>
+                            <td class="costo-unitario">${unitCost.toFixed(2)}€</td>
+                            <td style="text-align: right;"><button class="btn-edit" onclick="compilaFormModifica('${catDef.id}', '${safeMarca}', ${item.prezzo}, ${item.qta}, '${safeShop}')">✏️ Modifica</button></td>
+                        </tr>
+                    `;
+                });
+            }
+
+            html += `</tbody></table></div>`;
+            section.innerHTML = html;
+            container.appendChild(section);
+        });
+
+        updateTotal();
+    }
+
+    function compilaFormModifica(cat, marca, prezzo, qta, shop) {
+        document.getElementById(`new-marca-${cat}`).value = marca;
+        document.getElementById(`new-prezzo-${cat}`).value = prezzo;
+        document.getElementById(`new-qta-${cat}`).value = qta;
+        document.getElementById(`new-shop-${cat}`).value = shop;
+    }
+
+    async function inviaDati(catId, unita) {
+        const marcaInput = document.getElementById(`new-marca-${catId}`).value.trim();
+        const prezzoInput = document.getElementById(`new-prezzo-${catId}`).value;
+        const qtaInput = document.getElementById(`new-qta-${catId}`).value;
+        const shopInput = document.getElementById(`new-shop-${catId}`).value.trim();
+
+        if(!marcaInput || !prezzoInput || !qtaInput) {
+            alert("Attenzione: Devi inserire Marca, Prezzo e Quantità!");
+            return;
+        }
+
+        // Crea un ID univoco pulendo la marca (es. "Ami_nashclaw") per sovrascrivere automaticamente i vecchi
+        const docId = catId + "_" + marcaInput.replace(/\s+/g, '').toLowerCase();
+
+        try {
+            // Scrive o aggiorna direttamente in Firebase
+            await db.collection("prodotti").doc(docId).set({
+                categoria: catId,
+                marca: marcaInput,
+                prezzo: parseFloat(prezzoInput),
+                qta: parseFloat(qtaInput),
+                shop: shopInput,
+                unita: unita
+            });
+
+            // Svuota i campi
+            document.getElementById(`new-marca-${catId}`).value = '';
+            document.getElementById(`new-prezzo-${catId}`).value = '';
+            document.getElementById(`new-qta-${catId}`).value = '';
+            document.getElementById(`new-shop-${catId}`).value = '';
+
+            // NOTA BENE: Non serve chiamare renderApp() o aggiornare array. 
+            // Firebase capisce la modifica e lo fa da solo istantaneamente tramite onSnapshot!
+            
+        } catch (error) {
+            console.error("Errore Firebase:", error);
+            alert("Errore di connessione al database.");
+        }
+    }
+
+    function selectItem(catId, cost, rowId) {
+        selections[catId] = cost;
+        renderApp(); // Ridisegna per mostrare la riga verde
+    }
+
+    function updateTotal() {
+        let total = Object.values(selections).reduce((a, b) => a + b, 0);
+        const totalEl = document.getElementById('grandTotal');
+        if(totalEl) {
+            totalEl.innerText = total.toFixed(2) + " €";
+        }
+    }
+</script>
+
 </body>
 </html>
