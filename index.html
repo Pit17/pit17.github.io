@@ -80,10 +80,9 @@
 
 
 
-    // Inizializza Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    // =========================================================
+  
 
     let sharedData = [];
     let selections = {};
@@ -97,7 +96,7 @@
         { id: 'Beads', nome: 'Hook Beads / Stoppers', unita: 'pezzi' }
     ];
 
-    // LA MAGIA DI FIREBASE: Ascolta i cambiamenti in tempo reale
+    
     db.collection("prodotti").onSnapshot((querySnapshot) => {
         sharedData = [];
         querySnapshot.forEach((doc) => {
@@ -107,7 +106,7 @@
         document.getElementById('loading').style.display = 'none';
         document.getElementById('content').style.display = 'block';
         
-        renderApp(); // Ridisegna tutto istantaneamente quando i dati cambiano
+        renderApp(); 
     });
 
     function renderApp() {
@@ -208,11 +207,11 @@
             return;
         }
 
-        // Crea un ID univoco pulendo la marca (es. "Ami_nashclaw") per sovrascrivere automaticamente i vecchi
+        
         const docId = catId + "_" + marcaInput.replace(/\s+/g, '').toLowerCase();
 
         try {
-            // Scrive o aggiorna direttamente in Firebase
+            
             await db.collection("prodotti").doc(docId).set({
                 categoria: catId,
                 marca: marcaInput,
@@ -222,14 +221,13 @@
                 unita: unita
             });
 
-            // Svuota i campi
+            
             document.getElementById(`new-marca-${catId}`).value = '';
             document.getElementById(`new-prezzo-${catId}`).value = '';
             document.getElementById(`new-qta-${catId}`).value = '';
             document.getElementById(`new-shop-${catId}`).value = '';
 
-            // NOTA BENE: Non serve chiamare renderApp() o aggiornare array. 
-            // Firebase capisce la modifica e lo fa da solo istantaneamente tramite onSnapshot!
+            
             
         } catch (error) {
             console.error("Errore Firebase:", error);
@@ -239,7 +237,7 @@
 
     function selectItem(catId, cost, rowId) {
         selections[catId] = cost;
-        renderApp(); // Ridisegna per mostrare la riga verde
+        renderApp(); 
     }
 
     function updateTotal() {
