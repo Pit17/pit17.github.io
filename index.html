@@ -3,251 +3,563 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Costo Ronnie Rig</title>
-    
+    <title>Torneo Pokémon Veleno - Centro Estivo</title>
     <style>
-        :root { --primary: #2c3e50; --secondary: #34495e; --accent: #27ae60; --bg: #f4f7f9; --white: #ffffff; --border: #dcdfe3; --text: #333; }
-        * { box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); margin: 0; padding: 15px 15px 140px 15px; color: var(--text); }
-        .container { max-width: 1000px; margin: 0 auto; }
-        h1 { text-align: center; color: var(--primary); border-bottom: 3px solid var(--accent); padding-bottom: 15px; margin-bottom: 25px; }
-        .info-box { background: #e8f4fd; color: #0c5460; padding: 15px; border-radius: 8px; margin-bottom: 25px; font-size: 0.95em; border-left: 4px solid #3498db; }
-        .section { background: var(--white); padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 25px; overflow: hidden; }
-        .section h2 { margin-top: 0; color: var(--primary); font-size: 1.4rem; margin-bottom: 20px; border-left: 4px solid var(--accent); padding-left: 10px; }
-        .add-form { display: flex; flex-wrap: wrap; gap: 12px; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; align-items: flex-end; }
-        .form-group { display: flex; flex-direction: column; flex: 1 1 180px; }
-        .form-group.small { flex: 1 1 80px; }
-        label { font-size: 0.8rem; margin-bottom: 5px; font-weight: bold; color: #64748b; }
-        input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; }
-        input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 5px rgba(39, 174, 96, 0.3); }
-        .btn-save { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; flex: 1 1 100%; transition: all 0.2s; }
-        @media (min-width: 600px) { .btn-save { flex: 0 0 auto; } }
-        .btn-save:hover { background: var(--secondary); transform: translateY(-1px); }
-        .table-wrapper { width: 100%; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; min-width: 600px; }
-        th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid var(--border); }
-        th { background: #f8fafc; color: #64748b; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; }
-        .costo-unitario { font-weight: bold; color: var(--accent); }
-        .btn-edit { background: transparent; color: #64748b; border: 1px solid var(--border); padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; }
-        .btn-edit:hover { background: #f1f5f9; color: var(--primary); }
-        .total-panel { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--primary); color: white; padding: 20px; text-align: center; box-shadow: 0 -4px 10px rgba(0,0,0,0.2); z-index: 1000; }
-        .total-panel span { font-size: 1.1rem; opacity: 0.9; }
-        .price { font-size: 2.2rem; display: block; color: var(--accent); font-weight: bold; margin-top: 5px; }
-        #loading { text-align: center; font-size: 1.2em; color: var(--secondary); padding: 40px; }
-    </style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+        :root {
+            --bg-darkest: #07020a;      /* Sfondo quasi nero */
+            --panel-bg: #11051a;        /* Viola estremamente scuro per i pannelli */
+            --text-color: #ffffff;
+            --poison-accent: #b359f0;   /* Viola acceso per i bordi */
+            --team-giallo: #f1c40f;
+            --team-verde: #2ecc71;
+            --team-azzurro: #3498db;
+            --team-rosso: #e74c3c;
+        }
+
+        /* Regola globale per dimensioni corrette */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-darkest);
+            color: var(--text-color);
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* --- SCOREBOARD SUPERIORE --- */
+        .scoreboard {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #000000;
+            padding: 15px 30px;
+            border-bottom: 4px solid var(--poison-accent);
+            z-index: 10;
+        }
+
+        .team-score {
+            text-align: center;
+            font-weight: 900;
+            font-size: 1.5em;
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            width: 23%;
+            background: #1a1a1a;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+        }
+
+        .team-score.giallo { border-color: var(--team-giallo); color: var(--team-giallo); }
+        .team-score.verde { border-color: var(--team-verde); color: var(--team-verde); }
+        .team-score.azzurro { border-color: var(--team-azzurro); color: var(--team-azzurro); }
+        .team-score.rosso { border-color: var(--team-rosso); color: var(--team-rosso); }
+
+        /* --- AREA PRINCIPALE --- */
+        .main-arena {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 10px;
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* PANNELLO DI SELEZIONE SQUADRA (ANIMATORE) */
+        .team-selectors {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: #000000;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid #333;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .select-btn {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2em;
+            font-weight: 900;
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            color: #000;
+            transition: 0.2s;
+            text-transform: uppercase;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .select-btn.giallo { background: var(--team-giallo); }
+        .select-btn.verde { background: var(--team-verde); }
+        .select-btn.azzurro { background: var(--team-azzurro); }
+        .select-btn.rosso { background: var(--team-rosso); }
+
+        .select-btn:hover:not(.disabled) {
+            transform: scale(1.05);
+        }
+
+        .select-btn.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+            filter: grayscale(100%);
+        }
+
+        .select-btn.active {
+            border: 4px solid #fff;
+            transform: scale(1.1);
+            z-index: 2;
+        }
+
+        /* STATUS BANNER */
+        #turn-banner {
+            font-size: 1.5em;
+            font-weight: 900;
+            margin-bottom: 20px;
+            padding: 15px 30px;
+            border-radius: 50px;
+            background: #111;
+            color: #fff;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+            border: 2px dashed #444;
+        }
+
+        /* DOMANDA E RISPOSTE */
+        .question-box {
+            background: var(--panel-bg);
+            border: 3px solid var(--poison-accent);
+            padding: 30px;
+            border-radius: 15px;
+            font-size: 2.2em;
+            font-weight: 700;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            line-height: 1.3;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .option-btn {
+            background: #151525;
+            border: 3px solid #3d3d6b;
+            color: #ffffff;
+            font-size: 1.4em;
+            font-weight: 700;
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            text-align: left;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .option-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .option-letter {
+            color: #39FF14;
+            font-size: 1.5em;
+            margin-right: 15px;
+            font-weight: 900;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: #39FF14;
+            background: #1a1a33;
+        }
+
+        .option-btn.correct { background: #00ff88; color: #000; border-color: #fff; }
+        .option-btn.wrong { background: #ff3366; color: #fff; border-color: #fff; text-decoration: line-through; }
+
+        /* CONTROLLI ANIMATORE */
+        .admin-controls {
+            margin-top: 30px;
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .admin-btn {
+            padding: 20px 30px;
+            font-size: 1.2em;
+            font-weight: 900;
+            border-radius: 10px;
+            cursor: pointer;
+            border: none;
+            text-transform: uppercase;
+            display: none;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .btn-next { background: #39FF14; color: #000; }
+        .btn-unlock { background: #e67e22; color: #fff; }
+
+        /* SCHERMATA FINALE */
+        #final-screen {
+            display: none;
+            text-align: center;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #000000;
+            z-index: 100;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .podium-title { font-size: 3.5em; color: var(--poison-accent); margin-bottom: 30px; font-weight: 900;}
+        .podium-scores { font-size: 2.2em; line-height: 1.8; font-weight: 700; }
+
+        /* --- RESPONSIVE DESIGN PER SCHERMI PICCOLI --- */
+        @media (max-width: 900px) {
+            .scoreboard {
+                flex-wrap: wrap;
+                padding: 10px;
+                gap: 10px;
+                justify-content: center;
+            }
+            .team-score {
+                width: calc(50% - 10px);
+                font-size: 1.2em;
+                padding: 8px;
+            }
+            .team-selectors {
+                flex-wrap: wrap;
+            }
+            .select-btn {
+                width: calc(50% - 15px);
+                max-width: none;
+                flex: none;
+                font-size: 1em;
+                padding: 12px;
+            }
+            .question-box {
+                font-size: 1.6em;
+                padding: 20px;
+            }
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            #turn-banner {
+                font-size: 1.2em;
+            }
+            .admin-controls {
+                flex-direction: column;
+            }
+            .admin-btn {
+                max-width: none;
+                width: 100%;
+            }
+            .podium-title { font-size: 2.5em; }
+            .podium-scores { font-size: 1.5em; }
+        }
+
+        @media (max-width: 480px) {
+            .team-score {
+                font-size: 1em;
+            }
+            .question-box {
+                font-size: 1.3em;
+                padding: 15px;
+            }
+            .option-btn {
+                font-size: 1.1em;
+                padding: 15px;
+            }
+            .option-letter {
+                font-size: 1.2em;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Costo Ronnie Rig</h1>
-    
-    <div class="info-box">
-        🎣 <strong>Database connesso.</strong>
+    <div class="scoreboard">
+        <div class="team-score giallo" id="score-0">🟡 GIALLI<br><span id="pts-0">0</span> pt</div>
+        <div class="team-score verde" id="score-1">🟢 VERDI<br><span id="pts-1">0</span> pt</div>
+        <div class="team-score azzurro" id="score-2">🔵 AZZURRI<br><span id="pts-2">0</span> pt</div>
+        <div class="team-score rosso" id="score-3">🔴 ROSSI<br><span id="pts-3">0</span> pt</div>
     </div>
 
-    <div id="loading">Connessione al server in corso...</div>
-    <div id="content" style="display:none;"></div>
-</div>
-
-<div class="total-panel">
-    <span>Costo stimato del singolo Terminale:</span>
-    <span class="price" id="grandTotal">0.00 €</span>
-</div>
-
-<script>
-    
-   const firebaseConfig = {
-
-    apiKey: "AIzaSyAMPXiVYQEcGkaVABi2GamB9u9FaxWZSqc",
-
-    authDomain: "terminali-20d6f.firebaseapp.com",
-
-    databaseURL: "https://terminali-20d6f-default-rtdb.europe-west1.firebasedatabase.app",
-
-    projectId: "terminali-20d6f",
-
-    storageBucket: "terminali-20d6f.firebasestorage.app",
-
-    messagingSenderId: "289945470752",
-
-    appId: "1:289945470752:web:a1b82f35098d3f41a63945"
-
-  };
-
-
-
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-  
-
-    let sharedData = [];
-    let selections = {};
-
-    const categorieDef = [
-        { id: 'Filo', nome: 'Filo / Boom (30cm)', unita: 'metri' },
-        { id: 'Ami', nome: 'Ami (es. Nash Claw)', unita: 'pezzi' },
-        { id: 'Girelle', nome: 'Spinner Swivels', unita: 'pezzi' },
-        { id: 'Kicker', nome: 'Kickers / Guaina', unita: 'pezzi' },
-        { id: 'Viti', nome: 'Bait Screws / Girelline', unita: 'pezzi' },
-        { id: 'Beads', nome: 'Hook Beads / Stoppers', unita: 'pezzi' }
-    ];
-
-    
-    db.collection("prodotti").onSnapshot((querySnapshot) => {
-        sharedData = [];
-        querySnapshot.forEach((doc) => {
-            sharedData.push(doc.data());
-        });
+    <div class="main-arena">
         
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('content').style.display = 'block';
-        
-        renderApp(); 
-    });
+        <div id="turn-banner">IN ATTESA DI PRENOTAZIONE...</div>
 
-    function renderApp() {
-        const container = document.getElementById('content');
-        container.innerHTML = '';
+        <div class="team-selectors" id="team-selectors">
+            <button class="select-btn giallo" onclick="selectTeam(0)">🟡 GIALLI</button>
+            <button class="select-btn verde" onclick="selectTeam(1)">🟢 VERDI</button>
+            <button class="select-btn azzurro" onclick="selectTeam(2)">🔵 AZZURRI</button>
+            <button class="select-btn rosso" onclick="selectTeam(3)">🔴 ROSSI</button>
+        </div>
 
-        categorieDef.forEach(catDef => {
-            const section = document.createElement('div');
-            section.className = 'section';
+        <div class="question-box">
+            <div id="q-number" style="font-size: 0.5em; color: var(--poison-accent); margin-bottom: 10px; text-transform: uppercase;">DOMANDA 1 / 25</div>
+            <div id="question-text">Caricamento domanda...</div>
+        </div>
+
+        <div class="options-grid" id="options-container">
+            </div>
+
+        <div class="admin-controls">
+            <button class="admin-btn btn-unlock" id="btn-unlock" onclick="unlockTeams()">Sblocca (Fai provare un'altra squadra)</button>
+            <button class="admin-btn btn-next" id="btn-next" onclick="nextQuestion()">Prossima Domanda ➡️</button>
+        </div>
+
+    </div>
+
+    <div id="final-screen">
+        <div class="podium-title">🏆 CLASSIFICA FINALE 🏆</div>
+        <div class="podium-scores" id="final-podium"></div>
+    </div>
+
+    <script>
+        const quizData = [
+            { q: "Qual è la differenza tra un animale velenoso e uno tossico?", options: ["Non c’è differenza", "Il velenoso inietta; il tossico fa male se mangiato/toccato", "I tossici sono sempre piante", "Producono veleno solo se mangiano cibi velenosi"], answer: "B" },
+            { q: "Quante zampe hanno i ragni?", options: ["6", "8", "10", "12"], answer: "B" },
+            { q: "Gli scorpioni appartengono allo stesso gruppo dei…", options: ["Insetti", "Ragni", "Crostacei", "Vermi"], answer: "B" },
+            { q: "Dove si trova il pungiglione dello scorpione?", options: ["Sulla testa", "Alla punta della coda", "Sulle chele", "Sotto la pancia"], answer: "B" },
+            { q: "Vero o falso? Tutti i serpenti sono velenosi.", options: ["Vero", "Falso"], answer: "B" },
+            { q: "Quale di queste piante è nota per essere molto velenosa?", options: ["Girasole", "Oleandro", "Margherita", "Rosmarino"], answer: "B" },
+            { q: "Perché molte piante producono sostanze tossiche?", options: ["Per difendersi dagli erbivori", "Per crescere più in fretta", "Per attirare gli insetti", "Per fare ombra"], answer: "A" },
+            { q: "Quale serpente è famoso per il suo veleno neurotossico?", options: ["Cobra reale", "Biscia dal collare", "Pitone", "Anaconda"], answer: "A" },
+            { q: "Come si chiama il gruppo a cui appartengono ragni e scorpioni?", options: ["Rettili", "Aracnidi", "Anfibi", "Molluschi"], answer: "B" },
+            { q: "Gli scorpioni possono brillare sotto la luce ultravioletta.", options: ["Vero", "Falso", "Solo le femmine", "Solo se hanno appena mangiato"], answer: "A" },
+            { q: "Quale parte del corpo del ragno produce la seta?", options: ["Le filiere", "I cheliceri", "Gli occhi", "Le antenne"], answer: "A" },
+            { q: "Le vipere europee hanno spesso…", options: ["Pupille verticali", "Pupille quadrate", "Pupille azzurre", "Tre occhi"], answer: "A" },
+            { q: "Se trovi delle bacche che non conosci, cosa devi fare?", options: ["Assaggiarne una", "Non mangiarle e chiedere a un adulto", "Darle agli animali", "Schiacciarle tutte"], answer: "B" },
+            { q: "I colori vivaci di alcune rane serve soprattutto a…", options: ["Attirare la pioggia", "Avvisare i predatori che sono tossiche", "Spaventare altri anfibi", "Mimetizzarsi con i fiori"], answer: "B" },
+            { q: "Quale di questi animali NON è un rettile?", options: ["Tartaruga", "Medusa", "Lucertola", "Coccodrillo"], answer: "B" },
+            { q: "Che cosa fanno le chele dello scorpione?", options: ["Afferrare e trattenere le prede", "Iniettare il veleno", "Scavare tane profonde", "Volare"], answer: "A" },
+            { q: "Quale pianta contiene una tossina chiamata ricina?", options: ["Ricino", "Ortica", "Lavanda", "Menta"], answer: "A" },
+            { q: "Qual è lo scopo principale del veleno in natura?", options: ["Attaccare gli esseri umani", "Difendersi o procurarsi il cibo", "Diventare più forti", "Giocare con gli altri animali"], answer: "B" },
+            { q: "Quale di questi animali è uno dei pochi sauri velenosi conosciuti?", options: ["Iguana verde", "Mostro di Gila", "Geco domestico", "Camaleonte"], answer: "B" },
+            { q: "Vero o falso? Molti animali velenosi preferiscono evitare il contatto con le persone.", options: ["Vero", "Falso"], answer: "A" },
+            { q: "Quale senso usano molti serpenti per raccogliere odori dall’ambiente?", options: ["La lingua", "La coda", "Le zampe", "Le orecchie"], answer: "A" },
+            { q: "Quale comportamento è corretto se incontri un serpente selvatico?", options: ["Cercare di prenderlo", "Osservarlo da lontano e allontanarsi", "Tirargli dei sassi", "Urlare e saltare"], answer: "B" },
+            { q: "La neurotossina colpisce soprattutto…", options: ["Il sistema nervoso", "I muscoli delle gambe", "Le ossa", "I capelli"], answer: "A" },
+            { q: "Quale famosa pianta velenosa fu usata nell’antica Grecia?", options: ["Cicuta", "Basilico", "Salvia", "Prezzemolo"], answer: "A" },
+            { q: "Quale affermazione è la più corretta?", options: ["Tutti gli animali velenosi sono aggressivi", "Le piante velenose sono facili da riconoscere", "Molti animali velenosi attaccano solo se minacciati", "Gli animali velenosi non bevono acqua"], answer: "C" }
+        ];
+
+        const teams = [
+            { id: 0, name: "GIALLI", icon: "🟡", color: "var(--team-giallo)", pts: 0 },
+            { id: 1, name: "VERDI", icon: "🟢", color: "var(--team-verde)", pts: 0 },
+            { id: 2, name: "AZZURRI", icon: "🔵", color: "var(--team-azzurro)", pts: 0 },
+            { id: 3, name: "ROSSI", icon: "🔴", color: "var(--team-rosso)", pts: 0 }
+        ];
+
+        let currentQuestion = 0;
+        let activeTeamIndex = null; 
+        let teamsGuessedThisTurn = []; 
+        const letters = ["A", "B", "C", "D"];
+
+        function loadQuestion() {
+            activeTeamIndex = null;
+            teamsGuessedThisTurn = [];
             
-            let html = `<h2>${catDef.nome}</h2>
-                <div class="add-form">
-                    <div class="form-group">
-                        <label>Marca/Modello</label>
-                        <input type="text" id="new-marca-${catDef.id}" placeholder="Es. Nash, Korda...">
-                    </div>
-                    <div class="form-group small">
-                        <label>Prezzo €</label>
-                        <input type="number" id="new-prezzo-${catDef.id}" step="0.01">
-                    </div>
-                    <div class="form-group small">
-                        <label>Q.tà (${catDef.unita})</label>
-                        <input type="number" id="new-qta-${catDef.id}">
-                    </div>
-                    <div class="form-group">
-                        <label>Negozio/Link</label>
-                        <input type="text" id="new-shop-${catDef.id}" placeholder="Dove comprare?">
-                    </div>
-                    <button id="btn-add-${catDef.id}" class="btn-save" onclick="inviaDati('${catDef.id}', '${catDef.unita}')">Salva</button>
-                </div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Usa</th>
-                                <th>Marca</th>
-                                <th>Prezzo Conf.</th>
-                                <th>Q.tà</th>
-                                <th>Shop</th>
-                                <th>Costo Rig</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
-
-            const items = sharedData.filter(i => i.categoria === catDef.id);
+            document.getElementById("btn-unlock").style.display = "none";
+            document.getElementById("btn-next").style.display = "none";
             
-            if(items.length === 0) {
-                html += `<tr><td colspan="7" style="text-align: center; padding: 20px; color: #95a5a6;">Nessun prodotto inserito.</td></tr>`;
-            } else {
-                items.forEach((item, idx) => {
-                    const isFilo = catDef.id.toLowerCase() === 'filo';
-                    const unitCost = isFilo ? (item.prezzo / item.qta) * 0.3 : (item.prezzo / item.qta);
-                    const rowId = `row-${catDef.id}-${idx}`;
-                    
-                    const safeMarca = item.marca.replace(/'/g, "\\'");
-                    const safeShop = item.shop.replace(/'/g, "\\'");
-                    const isChecked = selections[catDef.id] === unitCost ? 'checked' : '';
-                    const bgStyle = isChecked ? 'background-color: #f0fdf4;' : '';
+            const banner = document.getElementById("turn-banner");
+            banner.innerText = "IN ATTESA DI PRENOTAZIONE...";
+            banner.style.background = "#111";
+            banner.style.color = "#fff";
+            banner.style.borderColor = "#444";
 
-                    html += `
-                        <tr id="${rowId}" style="${bgStyle}">
-                            <td><input type="radio" name="radio-${catDef.id}" ${isChecked} style="transform: scale(1.3);" onclick="selectItem('${catDef.id}', ${unitCost}, '${rowId}')"></td>
-                            <td><strong>${item.marca}</strong></td>
-                            <td>${item.prezzo.toFixed(2)}€</td>
-                            <td>${item.qta} ${catDef.unita}</td>
-                            <td><small>${item.shop}</small></td>
-                            <td class="costo-unitario">${unitCost.toFixed(2)}€</td>
-                            <td style="text-align: right;"><button class="btn-edit" onclick="compilaFormModifica('${catDef.id}', '${safeMarca}', ${item.prezzo}, ${item.qta}, '${safeShop}')">✏️ Modifica</button></td>
-                        </tr>
-                    `;
-                });
-            }
-
-            html += `</tbody></table></div>`;
-            section.innerHTML = html;
-            container.appendChild(section);
-        });
-
-        updateTotal();
-    }
-
-    function compilaFormModifica(cat, marca, prezzo, qta, shop) {
-        document.getElementById(`new-marca-${cat}`).value = marca;
-        document.getElementById(`new-prezzo-${cat}`).value = prezzo;
-        document.getElementById(`new-qta-${cat}`).value = qta;
-        document.getElementById(`new-shop-${cat}`).value = shop;
-    }
-
-    async function inviaDati(catId, unita) {
-        const marcaInput = document.getElementById(`new-marca-${catId}`).value.trim();
-        const prezzoInput = document.getElementById(`new-prezzo-${catId}`).value;
-        const qtaInput = document.getElementById(`new-qta-${catId}`).value;
-        const shopInput = document.getElementById(`new-shop-${catId}`).value.trim();
-
-        if(!marcaInput || !prezzoInput || !qtaInput) {
-            alert("Attenzione: Devi inserire Marca, Prezzo e Quantità!");
-            return;
-        }
-
-        
-        const docId = catId + "_" + marcaInput.replace(/\s+/g, '').toLowerCase();
-
-        try {
-            
-            await db.collection("prodotti").doc(docId).set({
-                categoria: catId,
-                marca: marcaInput,
-                prezzo: parseFloat(prezzoInput),
-                qta: parseFloat(qtaInput),
-                shop: shopInput,
-                unita: unita
+            // Resetta i bottoni squadra
+            const selectBtns = document.querySelectorAll(".select-btn");
+            selectBtns.forEach(btn => {
+                btn.classList.remove("disabled", "active");
             });
 
-            
-            document.getElementById(`new-marca-${catId}`).value = '';
-            document.getElementById(`new-prezzo-${catId}`).value = '';
-            document.getElementById(`new-qta-${catId}`).value = '';
-            document.getElementById(`new-shop-${catId}`).value = '';
+            const qData = quizData[currentQuestion];
+            document.getElementById("q-number").innerText = `DOMANDA ${currentQuestion + 1} DI ${quizData.length}`;
+            document.getElementById("question-text").innerText = qData.q;
 
-            
-            
-        } catch (error) {
-            console.error("Errore Firebase:", error);
-            alert("Errore di connessione al database.");
+            const optionsContainer = document.getElementById("options-container");
+            optionsContainer.innerHTML = ""; 
+
+            // Genera le opzioni chiuse (disabilitate)
+            qData.options.forEach((optText, index) => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn disabled"; 
+                btn.id = `opt-${index}`;
+                btn.innerHTML = `<span class="option-letter">${letters[index]})</span> ${optText}`;
+                
+                btn.onclick = () => {
+                    if (activeTeamIndex !== null && !btn.classList.contains("disabled")) {
+                        checkAnswer(btn, letters[index], qData.answer);
+                    }
+                };
+                optionsContainer.appendChild(btn);
+            });
         }
-    }
 
-    function selectItem(catId, cost, rowId) {
-        selections[catId] = cost;
-        renderApp(); 
-    }
+        function selectTeam(index) {
+            if (teamsGuessedThisTurn.includes(index) || activeTeamIndex !== null) return;
 
-    function updateTotal() {
-        let total = Object.values(selections).reduce((a, b) => a + b, 0);
-        const totalEl = document.getElementById('grandTotal');
-        if(totalEl) {
-            totalEl.innerText = total.toFixed(2) + " €";
+            activeTeamIndex = index;
+            teamsGuessedThisTurn.push(index);
+
+            // Aggiorna UI Bottoni Squadra
+            const selectBtns = document.querySelectorAll(".select-btn");
+            selectBtns.forEach((btn, i) => {
+                if (i === index) {
+                    btn.classList.add("active");
+                    btn.classList.remove("disabled");
+                } else {
+                    btn.classList.add("disabled");
+                    btn.classList.remove("active");
+                }
+            });
+
+            // Aggiorna Banner
+            const team = teams[index];
+            const banner = document.getElementById("turn-banner");
+            banner.innerText = `È IL TURNO DEI ${team.name} ${team.icon}`;
+            banner.style.background = team.color;
+            banner.style.borderColor = team.color;
+            banner.style.color = (index === 0 || index === 1) ? "#000" : "#fff"; 
+
+            // Sblocca le risposte
+            const allOptions = document.querySelectorAll(".option-btn");
+            allOptions.forEach(btn => {
+                if (!btn.classList.contains("wrong")) {
+                    btn.classList.remove("disabled");
+                }
+            });
         }
-    }
-</script>
 
+        function checkAnswer(selectedBtn, selectedLetter, correctLetter) {
+            // Disabilita tutte le risposte
+            document.querySelectorAll(".option-btn").forEach(btn => btn.classList.add("disabled"));
+            
+            const banner = document.getElementById("turn-banner");
+
+            if (selectedLetter === correctLetter) {
+                // ESATTO
+                selectedBtn.classList.add("correct");
+                teams[activeTeamIndex].pts += 1;
+                document.getElementById(`pts-${activeTeamIndex}`).innerText = teams[activeTeamIndex].pts;
+                
+                banner.innerText = `RISPOSTA ESATTA! +1 PUNTO AI ${teams[activeTeamIndex].name}!`;
+                banner.style.background = "#00ff88";
+                banner.style.borderColor = "#00ff88";
+                banner.style.color = "#000";
+                
+                document.getElementById("btn-next").style.display = "block";
+
+            } else {
+                // SBAGLIATO
+                selectedBtn.classList.add("wrong");
+                banner.innerText = `SBAGLIATO! I ${teams[activeTeamIndex].name} PASSANO IL TURNO!`;
+                banner.style.background = "#ff3366";
+                banner.style.borderColor = "#ff3366";
+                banner.style.color = "#fff";
+                
+                // Se tutte le squadre hanno provato
+                if (teamsGuessedThisTurn.length === teams.length) {
+                    document.getElementById("btn-next").style.display = "block";
+                    // Mostra la risposta corretta
+                    document.querySelectorAll(".option-btn").forEach((btn, idx) => {
+                        if (letters[idx] === correctLetter) btn.classList.add("correct");
+                    });
+                } else {
+                    document.getElementById("btn-unlock").style.display = "block";
+                    document.getElementById("btn-next").style.display = "block"; 
+                }
+            }
+        }
+
+        function unlockTeams() {
+            activeTeamIndex = null;
+            document.getElementById("btn-unlock").style.display = "none";
+            document.getElementById("btn-next").style.display = "none";
+            
+            const banner = document.getElementById("turn-banner");
+            banner.innerText = "SELEZIONA UN'ALTRA SQUADRA";
+            banner.style.background = "#111";
+            banner.style.borderColor = "#444";
+            banner.style.color = "#fff";
+
+            // Sblocca i bottoni squadra solo per chi non ha ancora giocato
+            const selectBtns = document.querySelectorAll(".select-btn");
+            selectBtns.forEach((btn, i) => {
+                btn.classList.remove("active");
+                if (!teamsGuessedThisTurn.includes(i)) {
+                    btn.classList.remove("disabled");
+                }
+            });
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                showFinalPodium();
+            }
+        }
+
+        function showFinalPodium() {
+            document.querySelector(".main-arena").style.display = "none";
+            document.querySelector(".scoreboard").style.display = "none";
+            
+            const screen = document.getElementById("final-screen");
+            const podium = document.getElementById("final-podium");
+            
+            const sortedTeams = [...teams].sort((a, b) => b.pts - a.pts);
+            
+            let html = "";
+            const medaglie = ["🥇", "🥈", "🥉", "🏅"];
+            
+            sortedTeams.forEach((t, i) => {
+                html += `<div style="color: ${t.color}; margin: 15px 0;">
+                            ${medaglie[i]} SQUADRA ${t.name} ${t.icon} - <strong>${t.pts} PUNTI</strong>
+                         </div>`;
+            });
+
+            podium.innerHTML = html;
+            screen.style.display = "flex";
+        }
+
+        // START
+        loadQuestion();
+    </script>
 </body>
 </html>
